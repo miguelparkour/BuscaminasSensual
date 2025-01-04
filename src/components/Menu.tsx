@@ -9,13 +9,13 @@ const Menu: React.FC = () => {
       <h1 className="text-5xl font-bold mb-10 text-center">Buscaminas Sensual</h1>
       <button
         className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded mb-4 w-40"
-        onClick={() => navigate('/juego')}
+        onClick={() => navigate('/BuscaminasSensual/juego')}
       >
         Jugar
       </button>
       <button
         className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-40"
-        onClick={() => navigate('/galeria')}
+        onClick={() => navigate('/BuscaminasSensual/galeria')}
       >
         Galería
       </button>
