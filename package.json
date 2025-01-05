@@ -2,7 +2,8 @@
   "name": "buscaminassensual",
   "homepage": "https://tuusuario.github.io/BuscaminasSensual",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "Versión inicial del juego buscaminas, de momento con un diseño muy básico y sin funcionalidades avanzadas.",
   "type": "module",
   "scripts": {
     "dev": "vite",

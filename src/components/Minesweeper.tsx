@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Cell } from '../models/types';
 import Board from './Board';
 import {
@@ -6,12 +6,23 @@ import {
   expandZeroCells,
   countFlaggedNeighbors,
   checkVictory,
+  checkDefeat
 } from '../utils';
+import { revealAllCells } from '../utils';
+import ModalMessage from './ModalMessage';
 
-const Minesweeper: React.FC = () => {
+interface MinesweeperProps {
+  onGameIsOver: () => void;
+}
+
+const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver }) => {
   const [grid, setGrid] = useState<Cell[][]>(initializeBoard(8, 8));
   const touchStartRef = useRef<number | null>(null);
   const lastTapRef = useRef<number | null>(null);
+  const [victory, setVictory] = useState(false);
+  const [defeat, setDefeat] = useState(false);
+
+  const [gameIsOver, setGameIsOver] = useState(false);
 
   // Revelar celda
   const revealCell = (row: number, col: number) => {
@@ -22,17 +33,11 @@ const Minesweeper: React.FC = () => {
 
     cell.isRevealed = true;
 
-    if (cell.isMine) {
-      alert('¡BOOM! Has pisado una mina.');
-    } else if (cell.neighborMines === 0) {
+    if (cell.neighborMines === 0) {
       expandZeroCells(newGrid, row, col);
     }
 
     setGrid(newGrid);
-
-    if (checkVictory(newGrid)) {
-      alert('¡Felicidades! Has ganado el juego.');
-    }
   };
 
   // Poner o quitar bandera
@@ -82,10 +87,6 @@ const Minesweeper: React.FC = () => {
         }
       }
       setGrid(newGrid);
-
-      if (checkVictory(newGrid)) {
-        alert('¡Felicidades! Has ganado el juego2.');
-      }
     }
   };
 
@@ -126,15 +127,50 @@ const Minesweeper: React.FC = () => {
     touchStartRef.current = null;
   };
 
+  /**
+   * useEffect para comprobar victoria o derrota DESPUÉS de que el estado 'grid' cambie.
+   * Si se cumple la condición de victoria, se revelan todas las celdas y se muestra el modal.
+   * Si se cumple la condición de derrota, se revelan todas las minas y se muestra el modal.
+   * Si no se cumple ninguna, no pasa nada.
+   * Este useEffect se ejecuta cada vez que 'grid' cambia.
+   */
+  useEffect(() => {
+    if(gameIsOver == false) {
+
+      if (checkVictory(grid)) {
+        setVictory(true);
+      } else if (checkDefeat(grid)) {
+        setDefeat(true);
+      }
+    }
+  }, [grid]);
+
+  // Función para cerrar el modal
+  const handleCloseModal = () => {
+    setGrid(revealAllCells(grid));
+    setGameIsOver(true);
+    setVictory(false);
+    setDefeat(false);
+    onGameIsOver();
+  };
+
   return (
-    <Board
-      grid={grid}
-      onReveal={revealCell}
-      onFlag={toggleFlag}
-      onDoubleReveal={revealNeighborsIfFlagsMatch}
-      onTouchStartCell={handleTouchStartCell}
-      onTouchEndCell={handleTouchEndCell}
-    />
+    <>
+      <Board
+        grid={grid}
+        onReveal={revealCell}
+        onFlag={toggleFlag}
+        onDoubleReveal={revealNeighborsIfFlagsMatch}
+        onTouchStartCell={handleTouchStartCell}
+        onTouchEndCell={handleTouchEndCell}
+      />
+      
+      {/* Si victory == true, muestra el Modal */}
+      {victory && <ModalMessage message="¡Has ganado!" onClose={handleCloseModal} />}
+      
+      {/* Si defeat == true, muestra el Modal */}
+      {defeat && <ModalMessage message="💣¡Boom! Has perdido." onClose={handleCloseModal} />}
+    </>
   );
 };
 

@@ -125,3 +125,20 @@ export function checkVictory(grid: Cell[][]): boolean {
     )
   );
 }
+
+export function checkDefeat(grid: Cell[][]): boolean {
+  return grid.some((row) => row.some((cell) => cell.isMine && cell.isRevealed));
+}
+
+/**
+ * Revela todas las celdas (bombas incluidas).
+ * Devuelve una copia del grid modificado.
+ */
+export function revealAllCells(grid: Cell[][]): Cell[][] {
+  return grid.map((row) =>
+    row.map((cell) => ({
+      ...cell,
+      isRevealed: true,
+    }))
+  );
+}
