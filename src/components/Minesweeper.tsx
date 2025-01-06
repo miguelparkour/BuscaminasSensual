@@ -13,9 +13,10 @@ import ModalMessage from './ModalMessage';
 
 interface MinesweeperProps {
   onGameIsOver: () => void;
+  resetBoard: boolean;
 }
 
-const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver }) => {
+const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) => {
   const [grid, setGrid] = useState<Cell[][]>(initializeBoard(8, 8));
   const touchStartRef = useRef<number | null>(null);
   const lastTapRef = useRef<number | null>(null);
@@ -144,6 +145,16 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver }) => {
       }
     }
   }, [grid]);
+  
+  // Cada vez que resetBoard cambie a true, reinicia la grid:
+  useEffect(() => {
+    if (resetBoard) {
+      setGrid(initializeBoard(8, 8));
+      setVictory(false);
+      setDefeat(false);
+      setGameIsOver(false);
+    }
+  }, [resetBoard]);
 
   // Función para cerrar el modal
   const handleCloseModal = () => {
@@ -166,7 +177,7 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver }) => {
       />
       
       {/* Si victory == true, muestra el Modal */}
-      {victory && <ModalMessage message="¡Has ganado!" onClose={handleCloseModal} />}
+      {victory && <ModalMessage message="🎉 ¡Has ganado! 🎉" onClose={handleCloseModal} />}
       
       {/* Si defeat == true, muestra el Modal */}
       {defeat && <ModalMessage message="💣¡Boom! Has perdido." onClose={handleCloseModal} />}

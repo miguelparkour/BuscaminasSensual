@@ -1,6 +1,7 @@
 import React from 'react';
 import { Cell } from '../models/types';
 import CellComponent from './CellComponent';
+import chichenItza from '../assets/ChichenItza.jpg'
 
 interface BoardProps {
   grid: Cell[][];
@@ -20,7 +21,11 @@ const Board: React.FC<BoardProps> = ({
   onTouchEndCell,
 }) => {
   return (
-    <div className="grid grid-cols-8 gap-1 p-4 bg-gray-800">
+    <div className="grid grid-cols-8 gap-1 p-4 bg-gray-800" style={{
+      backgroundImage: `url(${chichenItza})`,
+      backgroundSize: 'cover',     // Equivalente a bg-cover
+      backgroundPosition: 'center' // Equivalente a bg-center
+    }}>
       {grid.map((row, rowIndex) =>
         row.map((cell, colIndex) => (
           <CellComponent

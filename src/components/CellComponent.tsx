@@ -44,7 +44,7 @@ const CellComponent: React.FC<CellComponentProps> = ({
   // Clases de estilo básicas, adáptalas a tu gusto
   const cellClassName = `
     w-10 h-10 flex items-center justify-center border
-    ${isRevealed ? (isMine ? 'bg-red-600' : 'bg-gray-500') : 'bg-gray-700'}
+    ${isRevealed ? (isMine ? 'bg-red-600' : (neighborMines == 0 ? 'opacity-30' : 'bg-gray-500')) : 'bg-gray-700'}
     cursor-pointer
   `;
 
@@ -61,6 +61,9 @@ const CellComponent: React.FC<CellComponentProps> = ({
       {!isRevealed && isFlagged && (
         <span className="text-yellow-400 text-xl">🚩</span>
       )}
+
+      {/* Mostrar mina si está revelada y es mina */}
+      {isRevealed && isMine && <span className="text-red-700 text-xl">💣</span>}
 
       {/* Mostrar número de minas si está revelada y no es mina */}
       {isRevealed && !isMine && neighborMines > 0 && (
