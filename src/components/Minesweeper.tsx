@@ -21,7 +21,6 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) 
   const touchStartRef = useRef<number | null>(null);
   const lastTapRef = useRef<number | null>(null);
   const [victory, setVictory] = useState(false);
-  const [defeat, setDefeat] = useState(false);
 
   const [showVictoryModal, setShowVictoryModal] = useState(false);
   const [showDefeatModal, setShowDefeatModal] = useState(false);
@@ -145,7 +144,6 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) 
         setVictory(true);
         setShowVictoryModal(true);
       } else if (checkDefeat(grid)) {
-        setDefeat(true);
         setShowDefeatModal(true);
       }
     }
@@ -156,7 +154,6 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) 
     if (resetBoard) {
       setGrid(initializeBoard(8, 8));
       setVictory(false);
-      setDefeat(false);
       setGameIsOver(false);
     }
   }, [resetBoard]);
