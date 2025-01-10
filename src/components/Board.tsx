@@ -10,6 +10,7 @@ interface BoardProps {
   onDoubleReveal: (row: number, col: number) => void;
   onTouchStartCell: (e: React.TouchEvent, row: number, col: number) => void;
   onTouchEndCell: (e: React.TouchEvent, row: number, col: number) => void;
+  isVictory: boolean;
 }
 
 const Board: React.FC<BoardProps> = ({
@@ -19,13 +20,15 @@ const Board: React.FC<BoardProps> = ({
   onDoubleReveal,
   onTouchStartCell,
   onTouchEndCell,
+  isVictory
 }) => {
   return (
-    <div className="grid grid-cols-8 gap-1 p-4 bg-gray-800" style={{
+    <div className='relative'>
+    <div className="grid grid-cols-8 gap-1 p-4 bg-gray-800 bg-cover bg-center rounded-3xl absolute w-full h-full" style={{
       backgroundImage: `url(${chichenItza})`,
-      backgroundSize: 'cover',     // Equivalente a bg-cover
-      backgroundPosition: 'center' // Equivalente a bg-center
-    }}>
+      filter: isVictory ? '' : 'opacity(0.4) blur(12px)',
+    }}></div>
+    <div className="grid grid-cols-8 gap-1 p-4 bg-gray-800 z-10 relative bg-transparent">
       {grid.map((row, rowIndex) =>
         row.map((cell, colIndex) => (
           <CellComponent
@@ -41,6 +44,7 @@ const Board: React.FC<BoardProps> = ({
           />
         ))
       )}
+    </div>
     </div>
   );
 };

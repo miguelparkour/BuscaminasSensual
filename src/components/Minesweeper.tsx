@@ -23,6 +23,9 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) 
   const [victory, setVictory] = useState(false);
   const [defeat, setDefeat] = useState(false);
 
+  const [showVictoryModal, setShowVictoryModal] = useState(false);
+  const [showDefeatModal, setShowDefeatModal] = useState(false);
+
   const [gameIsOver, setGameIsOver] = useState(false);
 
   // Revelar celda
@@ -140,8 +143,10 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) 
 
       if (checkVictory(grid)) {
         setVictory(true);
+        setShowVictoryModal(true);
       } else if (checkDefeat(grid)) {
         setDefeat(true);
+        setShowDefeatModal(true);
       }
     }
   }, [grid]);
@@ -160,8 +165,8 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) 
   const handleCloseModal = () => {
     setGrid(revealAllCells(grid));
     setGameIsOver(true);
-    setVictory(false);
-    setDefeat(false);
+    setShowVictoryModal(false);
+    setShowDefeatModal(false);
     onGameIsOver();
   };
 
@@ -174,13 +179,12 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) 
         onDoubleReveal={revealNeighborsIfFlagsMatch}
         onTouchStartCell={handleTouchStartCell}
         onTouchEndCell={handleTouchEndCell}
+        isVictory={victory}
       />
       
-      {/* Si victory == true, muestra el Modal */}
-      {victory && <ModalMessage message="🎉 ¡Has ganado! 🎉" onClose={handleCloseModal} />}
+      {showVictoryModal && <ModalMessage message="🎉 ¡Has ganado! 🎉" onClose={handleCloseModal} />}
       
-      {/* Si defeat == true, muestra el Modal */}
-      {defeat && <ModalMessage message="💣¡Boom! Has perdido." onClose={handleCloseModal} />}
+      {showDefeatModal && <ModalMessage message="💣¡Boom! Has perdido." onClose={handleCloseModal} />}
     </>
   );
 };
