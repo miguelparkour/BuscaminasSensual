@@ -70,9 +70,10 @@ const Board: React.FC<BoardProps> = ({
     // Cargamos la imagen de fondo al montar el componente
     const image = bgImage();
     setRandomImage(image);
-    // obtenemos el texto asociado a la imagen con un substring de la imagen desde el ultimo /
-    const text = findTextByImageName(image.substring(image.lastIndexOf('/') + 1));
-    setTextForImage(text);
+    // obtenemos el texto asociado a la imagen con un substring de la imagen desde el ultimo / hasta el punto
+    const text = image.substring(image.lastIndexOf('/') + 1, image.lastIndexOf('.'));
+    const girl = findTextByImageName(text);
+    setTextForImage(girl);
   }, [bgImage]);
 
   useEffect(() => {
