@@ -77,6 +77,7 @@ const Board: React.FC<BoardProps> = ({
       <div 
         className="grid grid-cols-8 gap-1 p-4 bg-gray-800 z-10 relative bg-transparent select-none"
         onClick={handleClick}
+        onTouchStart={handleClick}
         style={customStyle}>
         {grid.map((row, rowIndex) =>
           row.map((cell, colIndex) => (

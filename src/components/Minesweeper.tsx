@@ -119,7 +119,7 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard, bgI
   // Lógica de "long press" en móviles
   const handleTouchStartCell = (e: React.TouchEvent, row: number, col: number) => {
     console.log(`Touch start: ${row}-${col}`);
-    e.preventDefault();
+    // e.preventDefault();
     touchStartRef.current = Date.now();
   };
 

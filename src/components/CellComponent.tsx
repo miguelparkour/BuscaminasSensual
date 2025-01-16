@@ -56,6 +56,7 @@ const CellComponent: React.FC<CellComponentProps> = ({
       onDoubleClick={handleDoubleClick}
       onTouchStart={(e) => onTouchStartCell(e, rowIndex, colIndex)}
       onTouchEnd={(e) => onTouchEndCell(e, rowIndex, colIndex)}
+      
     >
       {/* Mostrar bandera si no está revelada y está marcada */}
       {!isRevealed && isFlagged && (
