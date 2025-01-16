@@ -1,17 +1,15 @@
 import { Cell } from './models/types';
 
 /**
- * Genera un tablero con el número de filas y columnas indicado
- * y distribuye minas de manera aleatoria.
+ * Genera un tablero sin minas iniciales.
  */
-export function initializeBoard(rows: number, cols: number): Cell[][] {
+export function initializeEmptyBoard(rows: number, cols: number): Cell[][] {
   const board: Cell[][] = [];
-
   for (let row = 0; row < rows; row++) {
     const newRow: Cell[] = [];
     for (let col = 0; col < cols; col++) {
       newRow.push({
-        isMine: Math.random() < 0.05, // 5% de probabilidad de ser mina
+        isMine: false, // Sin minas al principio
         isRevealed: false,
         neighborMines: 0,
         isFlagged: false,
@@ -19,8 +17,50 @@ export function initializeBoard(rows: number, cols: number): Cell[][] {
     }
     board.push(newRow);
   }
+  return board;
+}
 
-  // Calcula el número de minas vecinas de cada celda
+/**
+ * Distribuye minas en el tablero excluyendo una celda inicial y sus vecinas.
+ */
+export function placeMines(
+  board: Cell[][],
+  initialRow: number,
+  initialCol: number,
+  totalMines: number
+): Cell[][] {
+  const rows = board.length;
+  const cols = board[0].length;
+
+  // Genera todas las posiciones posibles
+  const positions: [number, number][] = [];
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      // Excluir la celda inicial y las adyacentes
+      if (Math.abs(row - initialRow) > 1 || Math.abs(col - initialCol) > 1) {
+        positions.push([row, col]);
+      }
+    }
+  }
+
+  // Verifica si hay suficientes posiciones para colocar las minas
+  if (totalMines > positions.length) {
+    throw new Error('Número de minas excede el número de celdas disponibles');
+  }
+
+  // Mezcla aleatoriamente las posiciones
+  for (let i = positions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [positions[i], positions[j]] = [positions[j], positions[i]];
+  }
+
+  // Toma las primeras `totalMines` posiciones y coloca las minas
+  for (let i = 0; i < totalMines; i++) {
+    const [row, col] = positions[i];
+    board[row][col].isMine = true;
+  }
+
+  // Actualiza el número de minas vecinas después de colocar las minas
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       board[row][col].neighborMines = countNeighborMines(board, row, col);

@@ -2,11 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Cell } from '../models/types';
 import Board from './Board';
 import {
-  initializeBoard,
   expandZeroCells,
   countFlaggedNeighbors,
   checkVictory,
-  checkDefeat
+  checkDefeat,
+  initializeEmptyBoard,
+  placeMines,
 } from '../utils';
 import { revealAllCells } from '../utils';
 import ModalMessage from './ModalMessage';
@@ -14,10 +15,12 @@ import ModalMessage from './ModalMessage';
 interface MinesweeperProps {
   onGameIsOver: () => void;
   resetBoard: boolean;
+  bgImage: string;
 }
 
-const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) => {
-  const [grid, setGrid] = useState<Cell[][]>(initializeBoard(8, 8));
+const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard, bgImage }) => {
+  const [grid, setGrid] = useState<Cell[][]>(initializeEmptyBoard(8, 8));
+  const [isFirstClick, setIsFirstClick] = useState(true); // Nuevo estado
   const touchStartRef = useRef<number | null>(null);
   const lastTapRef = useRef<number | null>(null);
   const [victory, setVictory] = useState(false);
@@ -27,9 +30,24 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) 
 
   const [gameIsOver, setGameIsOver] = useState(false);
 
+  // funcion para pintar en la consola el estado de la grid
+  // const printGrid = () => {
+  //   console.log(grid.map(row => row.map(cell => (cell.isMine ? '💣' : cell.neighborMines)).join(' ')).join('\n'));
+  // };
+
   // Revelar celda
   const revealCell = (row: number, col: number) => {
-    const newGrid = [...grid];
+    let newGrid = [...grid];
+
+    if (isFirstClick) {
+      // Colocar minas en el primer clic
+      newGrid = placeMines(newGrid, row, col, Math.floor(8 * 8 * 0.05)); // Ejemplo: 15% minas
+      setIsFirstClick(false);
+      // printGrid();
+    } else {
+      // printGrid();
+    }
+
     const cell = newGrid[row][col];
 
     if (cell.isRevealed || cell.isFlagged) return;
@@ -152,9 +170,10 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) 
   // Cada vez que resetBoard cambie a true, reinicia la grid:
   useEffect(() => {
     if (resetBoard) {
-      setGrid(initializeBoard(8, 8));
+      setGrid(initializeEmptyBoard(8, 8));
       setVictory(false);
       setGameIsOver(false);
+      setIsFirstClick(true); // Reinicia el estado para el primer clic
     }
   }, [resetBoard]);
 
@@ -177,6 +196,8 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard  }) 
         onTouchStartCell={handleTouchStartCell}
         onTouchEndCell={handleTouchEndCell}
         isVictory={victory}
+        bgImage= {() => bgImage}
+        resetBoard={resetBoard}
       />
       
       {showVictoryModal && <ModalMessage message="🎉 ¡Has ganado! 🎉" onClose={handleCloseModal} />}
