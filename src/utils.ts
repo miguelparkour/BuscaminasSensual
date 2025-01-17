@@ -32,6 +32,9 @@ export function placeMines(
   const rows = board.length;
   const cols = board[0].length;
 
+  console.clear();
+  console.log(`minas totales: ${totalMines}`);
+
   // Genera todas las posiciones posibles
   const positions: [number, number][] = [];
   for (let row = 0; row < rows; row++) {

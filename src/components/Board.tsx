@@ -99,6 +99,18 @@ const Board: React.FC<BoardProps> = ({
     }));
   }, [isVictory, victoryStage]); // Dependencias
 
+  // un useEffect que solo dependa de isVictory
+  useEffect(() => {
+    if (isVictory) {
+      // Si hay victoria, almacenamos el nombre de la imagen en el localStorage, en un array para saber qué imagenes ha ganado el usuario
+      console.log('Victory!');
+      // localStorage.setItem('lastImage', textForImage.imageName);
+      const victories = JSON.parse(localStorage.getItem('victories') || '[]');
+      victories.push(textForImage.imageName);
+      localStorage.setItem('victories', JSON.stringify(victories));
+    }
+  }, [isVictory]);
+
   // Calcula el filtro que se aplicará al fondo en función de victoryStage e isVictory
   const getBackgroundFilter = () => {
     // Si todavía NO hay victoria, mantenemos el blur de siempre
@@ -225,7 +237,7 @@ const Board: React.FC<BoardProps> = ({
     ${showFinalText ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
   `}
       >
-        <p className="p-6 rounded-lg backdrop-blur-sm text-white">
+        <div className="p-6 rounded-lg backdrop-blur-sm text-white">
           <p className="italic text-xl text-pink-400">“{textForImage.quote}”</p>
 
           <ul className="mt-4 space-y-1 text-start ml-16 mb-3">
@@ -238,7 +250,7 @@ const Board: React.FC<BoardProps> = ({
           <p className="text-white leading-relaxed">{textForImage.description}</p>
 
 
-        </p>
+        </div>
       </div>
 
 

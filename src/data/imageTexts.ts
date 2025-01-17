@@ -1,16 +1,16 @@
 // src/data/imageTexts.ts
 
-interface ImageText {
-    imageName: string;
-    quote: string;
-    name: string;
-    age: number;
-    height: number;
-    hair: string;
-    description: string;
-  }
-  
-  export const imageTexts: ImageText[] = [
+export interface ImageText {
+  imageName: string;
+  quote: string;
+  name: string;
+  age: number;
+  height: number;
+  hair: string;
+  description: string;
+}
+
+export const imageTexts: ImageText[] = [
     {
       imageName: 'cheerleader',
       quote: '"¿Crees que puedes seguirme el ritmo? Te advierto, no suelo perder."',

@@ -41,7 +41,10 @@ const Minesweeper: React.FC<MinesweeperProps> = ({ onGameIsOver, resetBoard, bgI
 
     if (isFirstClick) {
       // Colocar minas en el primer clic
-      newGrid = placeMines(newGrid, row, col, Math.floor(8 * 8 * 0.05)); // Ejemplo: 15% minas
+      // en porcentaje va en función de las victorias conseguidas, sumando cada una un 0.05 de minas y empezando por 0.05
+      const victoryCount = JSON.parse(localStorage.getItem('victories') || '[]').length;
+      const minesPercentage = 0.05 + victoryCount * 0.05;
+      newGrid = placeMines(newGrid, row, col, Math.floor(8 * 8 * minesPercentage));
       setIsFirstClick(false);
       // printGrid();
     } else {
